@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import SGDClassifier
+from sklearn.naive_bayes import ComplementNB
 
 from evaluate import valutazione
 from newspaper import Article
@@ -9,7 +9,7 @@ import pandas as pd
 import nltk
 
 nltk.download('stopwords')
-stemmer = nltk.stem.SnowballStemmer('italian')
+
 stopwords = nltk.corpus.stopwords.words('italian')
 stopwords.extend(['ansa'])
 
@@ -24,7 +24,7 @@ classificate = classificate[classificate['news_body'].notnull()]
 vectorizer = TfidfVectorizer(max_df=0.5, use_idf=True, stop_words=stopwords, ngram_range=(1, 3))
 X = vectorizer.fit_transform(classificate['news_body'])
 
-classifier = SGDClassifier(alpha=1e-5, tol=0.1)
+classifier = ComplementNB(alpha=0.2136)
 classifier.fit(X, classificate['news_category'])
 
 
@@ -48,7 +48,7 @@ def classify_ansa():
     X = vectorizer.transform(topnews['text'])
     topnews['category'] = classifier.predict(X)
 
-    topnews['category'].value_counts().plot(kind='bar', ylabel='% (previsione)')
+    topnews['category'].value_counts().plot(kind='bar', ylabel='# (previsione)')
     plt.show()
 
     while True:

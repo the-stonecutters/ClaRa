@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
-
+from sklearn.naive_bayes import ComplementNB
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,7 +42,7 @@ def confusion(result, labels=None, name=None):
 
 
 def valutazione(classificate, stopwords):
-    classificate['news_category'].value_counts().plot(kind='bar', ylabel='%')
+    classificate['news_category'].value_counts().plot(kind='bar', ylabel='#')
     plt.show()
 
     data_train, data_test = train_test_split(classificate, test_size=0.33, random_state=42)
@@ -55,9 +55,9 @@ def valutazione(classificate, stopwords):
     Y_train = data_train['news_category']
     Y_test = data_test['news_category']
 
-    classifier = SGDClassifier(alpha=1e-5, tol=0.1)
+    classifier = ComplementNB(alpha=0.2136)
 
-    name = "SGD Classifier"
+    name = classifier.__class__.__name__
 
     result = evaluate(classifier, X_train, X_test, Y_train, Y_test, name)
     confusion(result, target_names)

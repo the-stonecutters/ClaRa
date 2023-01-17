@@ -4,3 +4,4 @@ numpy
 nltk
 matplotlib
 newspaper3k
+kneed
